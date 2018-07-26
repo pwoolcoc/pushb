@@ -1,0 +1,22 @@
+[package]
+name = "pushb"
+authors = ["Paul Woolcock <paul@woolcock.us>"]
+version = "0.1.0"
+license = "GPL-3.0"
+description = """
+Like `pushd`, but for git branches
+"""
+repository = "https://github.com/pwoolcoc/pushb"
+
+[[bin]]
+name = "pushb"
+path = "src/pushb.rs"
+
+[[bin]]
+name = "popb"
+path = "src/popb.rs"
+
+[dependencies]
+dirs = "1.0.2"
+failure = "0.1.1"
+tempdir = "0.3.7"
