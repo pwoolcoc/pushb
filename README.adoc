@@ -4,6 +4,7 @@ This is a small cli utility that works similarly to `pushd`/`popd`, except on gi
 
 == Example
 
+[source,bash]
 ----
 ~/tmp$ mkdir test-repo
 ~/tmp$ cd test-repo
