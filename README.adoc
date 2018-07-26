@@ -28,12 +28,12 @@ Switched to branch 'my-new-branch'
 == Install
 
 ----
-$ cargo install pushd
+$ cargo install pushb
 ----
 
 == Use
 
 ----
-$ pushd <branch to switch to>
-$ popd
+$ pushb <branch to switch to>
+$ popb
 ----
