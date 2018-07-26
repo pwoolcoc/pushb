@@ -1,8 +1,11 @@
 extern crate dirs;
+#[macro_use] extern crate structopt;
 #[macro_use] extern crate failure;
 
 use std::env::args;
 use std::process::{self, Command};
+
+use structopt::StructOpt;
 
 use store::{Result, Store};
 
