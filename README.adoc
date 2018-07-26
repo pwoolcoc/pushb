@@ -23,3 +23,16 @@ Switched to branch 'master'
 Switched to branch 'my-new-branch'
 ~/tmp/test-repo on my-new-branch$ 
 ----
+
+== Install
+
+----
+$ cargo install pushd
+----
+
+== Use
+
+----
+$ pushd <branch to switch to>
+$ popd
+----
