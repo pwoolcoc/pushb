@@ -1,10 +1,11 @@
 [package]
-authors = ["Paul Woolcock <paul@woolcock.us>"]
-description = "Like `pushd`, but for git branches\n"
-license = "GPL-3.0"
 name = "pushb"
+authors = ["Paul Woolcock <paul@woolcock.us>"]
+version = "0.1.1"
+license = "GPL-3.0"
+description = "Like `pushd`, but for git branches\n"
 repository = "https://github.com/pwoolcoc/pushb"
-version = "0.1.0"
+
 [[bin]]
 name = "pushb"
 path = "src/pushb.rs"
