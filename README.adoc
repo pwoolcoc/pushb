@@ -6,23 +6,24 @@ This is a small cli utility that works similarly to `pushd`/`popd`, except on gi
 
 [source,bash]
 ----
-~/tmp$ mkdir test-repo
-~/tmp$ cd test-repo
-~/tmp/test-repo$ git init
+> mkdir test-repo
+> cd test-repo
+> git init
 Initialized empty Git repository in /home/pwoolcoc/tmp/test-repo/.git/
-~/tmp/test-repo on master$ touch test
-~/tmp/test-repo on master!$ git add test
-~/tmp/test-repo on master!$ git commit -m'initial commit'
+> touch test
+> git add test
+> git commit -m'initial commit'
 [master (root-commit) 4e7c7ad] initial commit
 1 file changed, 0 insertions(+), 0 deletions(-)
 create mode 100644 test
-~/tmp/test-repo on master$ git checkout -b my-new-branch
+> pushb -b my-new-branch
 Switched to a new branch 'my-new-branch'
-~/tmp/test-repo on my-new-branch$ pushb master
+> pushb master
 Switched to branch 'master'
-~/tmp/test-repo on master$ popb
+> popb
 Switched to branch 'my-new-branch'
-~/tmp/test-repo on my-new-branch$ 
+> popb
+Switched to branch 'master'
 ----
 
 == Install
@@ -35,5 +36,6 @@ $ cargo install pushb
 
 ----
 $ pushb <branch to switch to>
+$ pushb -b <branch to create then switch to>
 $ popb
 ----
