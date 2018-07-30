@@ -14,8 +14,10 @@ mod store;
 struct Args {
     #[structopt(short = "-b", help = "indicates branch should be created first")]
     pub create: bool,
-    #[structopt(name = "branch")]
+    #[structopt(name = "branch", help = "branch to switch to")]
     pub branch: String,
+    #[structopt(name = "base branch", help = "parent branch for the newly created branch")]
+    pub base_branch: Option<String>,
 }
 
 fn main() -> Result<()> {
@@ -23,18 +25,23 @@ fn main() -> Result<()> {
     let mut store = Store::new()?;
     let branch = get_branch()?;
     store.push(branch.trim())?;
-    let status = if args.create {
-        Command::new("git")
-                .arg("checkout")
-                .arg("-b")
-                .arg(args.branch.trim())
-                .status()?
-    } else {
-        Command::new("git")
-                .arg("checkout")
-                .arg(args.branch.trim())
-                .status()?
-    };
+
+    let mut cmd = Command::new("git");
+    cmd.arg("checkout");
+
+    if args.create {
+        cmd.arg("-b");
+    }
+
+    cmd.arg(args.branch.trim());
+
+    if args.create {
+        if let Some(ref base_branch) = args.base_branch {
+            cmd.arg(base_branch.trim());
+        }
+    }
+
+    let status = cmd.status()?;
     if !status.success() {
         if let Some(code) = status.code() {
             process::exit(code);
