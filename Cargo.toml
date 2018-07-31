@@ -1,7 +1,7 @@
 [package]
 name = "pushb"
 authors = ["Paul Woolcock <paul@woolcock.us>"]
-version = "0.1.1"
+version = "0.1.2"
 license = "GPL-3.0"
 description = "Like `pushd`, but for git branches\n"
 repository = "https://github.com/pwoolcoc/pushb"
