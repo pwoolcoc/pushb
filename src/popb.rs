@@ -1,5 +1,4 @@
 extern crate dirs;
-extern crate tempdir;
 #[macro_use] extern crate structopt;
 #[macro_use] extern crate failure;
 
