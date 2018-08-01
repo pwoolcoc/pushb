@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use std::process::Command;
 use std::fs::{self, OpenOptions};
 use std::path::PathBuf;
 use std::io::{BufRead, BufReader, Write};
@@ -13,10 +14,20 @@ pub(crate) struct Store(PathBuf);
 
 impl Store {
     pub(crate) fn new() -> Result<Store> {
-        let dir = if let Some(d) = dirs::data_dir() {
+        let parent_dir = if let Some(d) = dirs::data_dir() {
             d.join("pushb")
         } else {
             bail!("Couldn't get data directory");
+        };
+
+        let dir = {
+            let output = Command::new("git")
+                .arg("rev-list")
+                .arg("--max-parents=0")
+                .arg("HEAD")
+                .output()?;
+            let hash = String::from_utf8(output.stdout)?;
+            parent_dir.join(hash.trim())
         };
 
         fs::create_dir_all(&dir)?;
