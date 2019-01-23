@@ -1,6 +1,7 @@
 extern crate dirs;
-#[macro_use] extern crate structopt;
-#[macro_use] extern crate failure;
+extern crate structopt;
+#[macro_use]
+extern crate failure;
 
 use std::process::{self, Command};
 
@@ -16,7 +17,10 @@ struct Args {
     pub create: bool,
     #[structopt(name = "branch", help = "branch to switch to")]
     pub branch: String,
-    #[structopt(name = "base branch", help = "parent branch for the newly created branch")]
+    #[structopt(
+        name = "base branch",
+        help = "parent branch for the newly created branch"
+    )]
     pub base_branch: Option<String>,
 }
 
@@ -54,10 +58,10 @@ fn main() -> Result<()> {
 
 fn get_branch() -> Result<String> {
     let c = Command::new("git")
-                    .arg("rev-parse")
-                    .arg("--abbrev-ref")
-                    .arg("HEAD")
-                    .output()?;
+        .arg("rev-parse")
+        .arg("--abbrev-ref")
+        .arg("HEAD")
+        .output()?;
     let out = String::from_utf8(c.stdout)?;
     Ok(out)
 }
