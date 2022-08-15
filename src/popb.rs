@@ -14,6 +14,12 @@ struct Args {
     )]
     pub dryrun: bool,
     #[structopt(
+        short = "q",
+        long = "quiet",
+        help = "Suppresses output produced by calls to `git`"
+    )]
+    pub quiet: bool,
+    #[structopt(
         short = "l",
         long = "list",
         help = "displays a newline-delimited list of the current state of the branch stack"
@@ -22,20 +28,35 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    let args = Args::from_args();
+    let Args {
+        dryrun,
+        quiet,
+        list,
+    } = Args::from_args();
     let mut store = Store::new()?;
     let entries = store.get_all()?;
 
-    if args.list {
+    if list {
         for entry in entries.iter().rev() {
             println!("{}", entry);
         }
     } else {
         if let Some((last, elements)) = entries.split_last() {
-            if args.dryrun {
+            if dryrun {
                 println!("{}", last);
             } else {
-                let status = Command::new("git").arg("checkout").arg(&last).status().context("Couldn't checkout last branch")?;
+                let mut cmd = Command::new("git");
+
+                cmd.arg("checkout");
+
+                if quiet {
+                    cmd.arg("--quiet");
+                }
+
+                cmd.arg(&last);
+
+                let status = cmd.status().context("Couldn't checkout last branch")?;
+
                 store.write_entries(&elements)?;
                 if !status.success() {
                     if let Some(code) = status.code() {
