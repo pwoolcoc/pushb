@@ -1,16 +1,16 @@
 // every method of this is only used by one binary or another, so
-// you'll get dead code warnings for the methods that a binary doesn't use, which 
+// you'll get dead code warnings for the methods that a binary doesn't use, which
 // means you end up getting dead code warnings for every method. Until I figure
 // out how to fix this, just blanket allow dead_code for the whole module
 #![allow(dead_code)]
 
+use anyhow::{bail, Context};
 use std::{
-    io::{BufRead, BufReader, Write},
     fs::{self, OpenOptions},
+    io::{BufRead, BufReader, Write},
     path::PathBuf,
     process::Command,
 };
-use anyhow::{bail, Context};
 
 pub(crate) struct Store(PathBuf);
 
@@ -29,7 +29,8 @@ impl Store {
                 .arg("HEAD")
                 .output()
                 .context("Couldn't run git command")?;
-            let hash = String::from_utf8(output.stdout).context("Couldn't convert command output to UTF-8")?;
+            let hash = String::from_utf8(output.stdout)
+                .context("Couldn't convert command output to UTF-8")?;
             parent_dir.join(hash.trim())
         };
 
@@ -41,19 +42,31 @@ impl Store {
     }
 
     pub(crate) fn push(&mut self, branch: &str) -> anyhow::Result<()> {
-        let mut file = OpenOptions::new().create(true).append(true).open(&self.0).context("Couldn't open store")?;
-        Ok(writeln!(&mut file, "{}", branch.trim()).context("Couldn't write branch entry to store")?)
+        let mut file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&self.0)
+            .context("Couldn't open store")?;
+        Ok(writeln!(&mut file, "{}", branch.trim())
+            .context("Couldn't write branch entry to store")?)
     }
 
     pub(crate) fn get_all(&mut self) -> anyhow::Result<Vec<String>> {
-        let file = OpenOptions::new().read(true).open(&self.0).context("Couldn't open store")?;
+        let file = OpenOptions::new()
+            .read(true)
+            .open(&self.0)
+            .context("Couldn't open store")?;
         let reader = BufReader::new(file);
         let entries = reader.lines().filter_map(|l| l.ok()).collect::<Vec<_>>();
         Ok(entries)
     }
 
     pub(crate) fn write_entries(&mut self, entries: &[String]) -> anyhow::Result<()> {
-        let mut file = OpenOptions::new().write(true).truncate(true).open(&self.0).context("Couldn't open store")?;
+        let mut file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(&self.0)
+            .context("Couldn't open store")?;
         for entry in entries {
             writeln!(&mut file, "{}", entry).context("Couldn't write entry to store")?;
         }
