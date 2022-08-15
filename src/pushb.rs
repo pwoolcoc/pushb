@@ -1,13 +1,7 @@
-extern crate dirs;
-extern crate structopt;
-#[macro_use]
-extern crate failure;
-
+use anyhow::bail;
 use std::process::{self, Command};
-
 use structopt::StructOpt;
-
-use store::{Result, Store};
+use store::Store;
 
 mod store;
 
@@ -24,7 +18,7 @@ struct Args {
     pub base_branch: Option<String>,
 }
 
-fn main() -> Result<()> {
+fn main() -> anyhow::Result<()> {
     let args = Args::from_args();
     let mut store = Store::new()?;
     let branch = get_branch()?;
@@ -56,7 +50,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_branch() -> Result<String> {
+fn get_branch() -> anyhow::Result<String> {
     let c = Command::new("git")
         .arg("rev-parse")
         .arg("--abbrev-ref")

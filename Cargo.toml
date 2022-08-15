@@ -3,6 +3,7 @@ name = "pushb"
 authors = ["Paul Woolcock <paul@woolcock.us>"]
 version = "0.2.2"
 license = "GPL-3.0"
+edition = "2021"
 description = "Like `pushd`, but for git branches\n"
 repository = "https://github.com/pwoolcoc/pushb"
 
@@ -15,6 +16,6 @@ name = "popb"
 path = "src/popb.rs"
 
 [dependencies]
+anyhow = "1.0.61"
 dirs = "1.0.2"
-failure = "0.1.1"
 structopt = "0.2.10"

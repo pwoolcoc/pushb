@@ -1,13 +1,7 @@
-extern crate dirs;
-extern crate structopt;
-#[macro_use]
-extern crate failure;
-
+use anyhow::{bail, Context};
 use std::process::{self, Command};
-
+use store::Store;
 use structopt::StructOpt;
-
-use store::{Result, Store};
 
 mod store;
 
@@ -27,7 +21,7 @@ struct Args {
     pub list: bool,
 }
 
-fn main() -> Result<()> {
+fn main() -> anyhow::Result<()> {
     let args = Args::from_args();
     let mut store = Store::new()?;
     let entries = store.get_all()?;
@@ -36,13 +30,12 @@ fn main() -> Result<()> {
         for entry in entries.iter().rev() {
             println!("{}", entry);
         }
-        Ok(())
     } else {
         if let Some((last, elements)) = entries.split_last() {
             if args.dryrun {
                 println!("{}", last);
             } else {
-                let status = Command::new("git").arg("checkout").arg(&last).status()?;
+                let status = Command::new("git").arg("checkout").arg(&last).status().context("Couldn't checkout last branch")?;
                 store.write_entries(&elements)?;
                 if !status.success() {
                     if let Some(code) = status.code() {
@@ -52,10 +45,10 @@ fn main() -> Result<()> {
                     }
                 }
             }
-            Ok(())
         } else {
             eprintln!("no entries");
             ::std::process::exit(1);
         }
     }
+    Ok(())
 }
